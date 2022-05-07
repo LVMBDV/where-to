@@ -1,37 +1,40 @@
-import fastify, { FastifyInstance } from "fastify"
-import { plugin as fastifyMongoose, Options as FastifyMongooseOptions, Decorator as MongooseDecorator } from "@ederzadravec/fastify-mongoose"
+import fastify from "fastify"
+import mongoosePlugin, { DecoratedWithMongoose, MongoosePluginOptions } from "./helpers/MongoosePlugin"
 import routes from "./routes"
-import models from "./models"
+import schemas from "./schemas"
 
-interface FastifyInstanceWithMongoose extends FastifyInstance {
-  mongoose: MongooseDecorator
+declare module "fastify" {
+  // It's not empty, it merges DecoratedWithMongoose into FastifyInstance :)
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface FastifyInstance extends DecoratedWithMongoose {}
 }
 
-const app = fastify({
-  logger: true
-})
+export default async () => {
+  const app = fastify({
+    logger: true
+  })
 
-const mongooseOptions: FastifyMongooseOptions = {
-  uri: process.env.MONGO_URI ?? "mongodb://localhost:27017/where-to",
-  settings: { autoIndex: false },
-  models
-}
-
-app.register(fastifyMongoose, mongooseOptions)
-
-for (const route of routes) {
-  app.register(route)
-}
-
-app.ready((error?: Error) => {
-  if (error !== undefined) {
-    throw error
+  const mongooseOptions: MongoosePluginOptions = {
+    uri: process.env.MONGO_URI ?? "mongodb://localhost:27017/where-to",
+    options: {
+      autoIndex: false,
+      connectTimeoutMS: 1000,
+      serverSelectionTimeoutMS: 1000
+    }
   }
 
-  const appWithMongoose = app as unknown as FastifyInstanceWithMongoose
-  if (appWithMongoose.mongoose.instance === undefined) {
-    throw new Error("Mongoose instance is undefined. Failed to connect to mongoDB.")
-  }
-})
+  app.register(mongoosePlugin, mongooseOptions)
+  app.after(() => {
+    for (const name in schemas) {
+      app.mongoose.model(name, schemas[name])
+    }
+  })
 
-export default app
+  for (const route of routes) {
+    app.register(route)
+  }
+
+  await app.ready()
+
+  return app
+}

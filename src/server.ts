@@ -1,6 +1,8 @@
-import app from "./app"
+import setupApp from "./app"
 
 (async() => {
+  const app = await setupApp()
+
   try {
     const address = await app.listen(
       process.env.NODE_PORT ?? 3000,

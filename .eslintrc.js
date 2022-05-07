@@ -14,7 +14,8 @@ module.exports = {
   ],
   ignorePatterns: ["dist/**/*"],
   rules: {
-    "semi": ["error", "never"],
-    "quotes": ["error", "double"],
+    "@typescript-eslint/semi": ["error", "never"],
+    "@typescript-eslint/quotes": ["error", "double"],
+    "@typescript-eslint/no-empty-interface": "warn"
   }
 }
