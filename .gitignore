@@ -1,0 +1,5 @@
+node_modules
+dist
+**/*.tsbuildinfo
+
+data/cities_canada-usa.json

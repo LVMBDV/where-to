@@ -1,0 +1,47 @@
+{
+  "name": "where-to",
+  "description": "A REST service that provides autocomplete suggestions for highly populated cities",
+  "version": "1.0.0",
+  "author": "Ata Kuyumcu",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "build:app": "tsc -p src",
+    "build:data": "ts-node scripts/prepare-data.ts",
+    "build": "npm run build:app && npm run build:data",
+    "prestart": "npm run build:app",
+    "start": "node dist/server.js",
+    "lint": "eslint --fix ."
+  },
+  "engines": {
+    "node": ">= 16"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LVMBDV/where-to.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LVMBDV/where-to/issues"
+  },
+  "homepage": "https://github.com/LVMBDV/where-to#readme",
+  "devDependencies": {
+    "@types/jest": "^27.5.0",
+    "@types/mongodb": "^4.0.7",
+    "@types/node": "^17.0.31",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "ascii-bar": "^1.0.3",
+    "csv": "^6.0.5",
+    "eslint": "^8.15.0",
+    "jest": "^28.0.3",
+    "mongodb-memory-server": "^8.5.2",
+    "ts-jest": "^28.0.1",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "@ederzadravec/fastify-mongoose": "^1.1.2",
+    "fastify": "^3.29.0",
+    "geojson-places": "^1.0.3"
+  }
+}
