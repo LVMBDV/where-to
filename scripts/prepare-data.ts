@@ -22,7 +22,7 @@ const input = createReadStream(resolve(__dirname, "../data/cities_canada-usa.tsv
 const parser = parse({
   columns: true,
   delimiter: "\t",
-  relax_quotes: true
+  quote: null
 })
 const output = createWriteStream(resolve(__dirname, "../data/cities_canada-usa.json"))
 const transformer = transform((record, callback) => {
@@ -37,7 +37,7 @@ const transformer = transform((record, callback) => {
         parseFloat(record.lat)
       ]
     },
-    country_code: record.country_code
+    country_code: record.country
   }
 
   const [lng, lat] = result.location.coordinates
@@ -47,7 +47,7 @@ const transformer = transform((record, callback) => {
     result.region_code = place.region_code
     result.state_code = place.state_code
 
-    if (place.country_a2 !== result.country_code) {
+    if (place.country_a2 !== undefined && result.country_code !== place.country_a2) {
       result.country_code = place.country_a2
     }
   }
