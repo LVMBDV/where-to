@@ -11,7 +11,7 @@ declare module "fastify" {
 
 export default async () => {
   const app = fastify({
-    logger: true
+    logger: process.env.NODE_ENV !== "test"
   })
 
   const mongooseOptions: MongoosePluginOptions = {
@@ -23,15 +23,13 @@ export default async () => {
     }
   }
 
-  app.register(mongoosePlugin, mongooseOptions)
-  app.after(() => {
-    for (const name in schemas) {
-      app.mongoose.model(name, schemas[name])
-    }
-  })
+  await app.register(mongoosePlugin, mongooseOptions)
+  for (const name in schemas) {
+    app.mongoose.model(name, schemas[name])
+  }
 
   for (const route of routes) {
-    app.register(route)
+    await app.register(route)
   }
 
   await app.ready()

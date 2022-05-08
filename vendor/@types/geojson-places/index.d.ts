@@ -1,5 +1,5 @@
 declare module "geojson-places" {
-  export interface LookUpResult {
+  export function lookUp(lat: number, lng: number): null | {
     continent_code: string
     country_a2: string
     country_a3: string
@@ -7,5 +7,14 @@ declare module "geojson-places" {
     state_code: string
   }
 
-  export function lookUp(lat: number, lng: number): LookUpResult | null
+  export function getStateByCode(stateCode: string): null | {
+    state_code: string
+    state_name: string
+  }
+
+  export function getCountryByAlpha2(countryCode: string): null | {
+    country_a2: string
+    country_a3: string
+    country_name: string
+  }
 }

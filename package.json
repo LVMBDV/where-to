@@ -11,7 +11,8 @@
     "build": "npm run build:app && npm run build:data",
     "prestart": "npm run build:app",
     "start": "node dist/server.js",
-    "lint": "eslint --fix ."
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "engines": {
     "node": ">= 16"
