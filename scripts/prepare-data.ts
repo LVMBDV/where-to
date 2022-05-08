@@ -4,6 +4,7 @@ import { resolve } from "path"
 import { lookUp } from "geojson-places"
 import AsciiBar from "ascii-bar"
 import { execSync } from "child_process"
+import { City } from "../src/schemas/City"
 
 const totalLineCount = parseInt(
   execSync(`wc -l "${resolve(__dirname, "../data/cities_canada-usa.tsv")}"`)
@@ -60,16 +61,3 @@ const transformer = transform((record, callback) => {
 
 output.write("[\n")
 input.pipe(parser).pipe(transformer).pipe(output)
-
-interface City {
-  name: string
-  ascii_name: string
-  alternative_names: string[]
-  location: {
-    type: "Point"
-    coordinates: [number, number]
-  }
-  country_code: string
-  region_code?: string
-  state_code?: string
-}

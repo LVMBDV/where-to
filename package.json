@@ -32,13 +32,16 @@
     "ascii-bar": "^1.0.3",
     "csv": "^6.0.5",
     "eslint": "^8.15.0",
+    "geo-nearby": "^2.0.1",
     "jest": "^28.0.3",
+    "jest-extended": "^2.0.0",
     "mongodb-memory-server": "^8.5.2",
     "ts-jest": "^28.0.1",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.4"
   },
   "dependencies": {
+    "escape-string-regexp": "^4.0.0",
     "fastify": "^3.29.0",
     "fastify-plugin": "^3.0.1",
     "geojson-places": "^1.0.3",
