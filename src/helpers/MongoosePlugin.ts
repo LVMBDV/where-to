@@ -19,8 +19,11 @@ const plugin: FastifyPluginAsync<MongoosePluginOptions> = async (fastify, { uri,
   fastify.decorate("mongoose", mongoose)
 }
 
-export interface DecoratedWithMongoose {
-  mongoose: Mongoose
+// Extend the FastifyInstance interface with our decorator.
+declare module "fastify" {
+  interface FastifyInstance {
+    mongoose: Mongoose
+  }
 }
 
 export interface MongoosePluginOptions {

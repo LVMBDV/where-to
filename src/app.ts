@@ -1,13 +1,7 @@
 import fastify from "fastify"
-import mongoosePlugin, { DecoratedWithMongoose, MongoosePluginOptions } from "./helpers/MongoosePlugin"
+import mongoosePlugin, { MongoosePluginOptions } from "./helpers/MongoosePlugin"
 import routes from "./routes"
 import schemas from "./schemas"
-
-declare module "fastify" {
-  // It's not empty, it merges DecoratedWithMongoose into FastifyInstance :)
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface FastifyInstance extends DecoratedWithMongoose {}
-}
 
 /**
  * Sets up the fastify instance and waits for it to be ready.
