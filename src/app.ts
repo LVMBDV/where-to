@@ -9,6 +9,14 @@ declare module "fastify" {
   interface FastifyInstance extends DecoratedWithMongoose {}
 }
 
+/**
+ * Sets up the fastify instance and waits for it to be ready.
+ * @returns The ready fastify instance.
+ *
+ * @remarks
+ * This function will fail if it fails to connect to MongoDB on initialization.
+ *
+ */
 export default async () => {
   const app = fastify({
     logger: process.env.NODE_ENV !== "test"

@@ -54,8 +54,24 @@ const citySchema = new Schema<City, CityModel, unknown, CityQueryHelpers>({
   }
 })
 
-citySchema.query.byName = function(query: string): CityQuery {
-  const queryPattern = new RegExp(escapeStringRegexp(query), "i")
+/**
+ * Search for cities with a given name.
+ *
+ * @param query - Name to search for, can be partial.
+ * @param prefixSearch - Whether to only search for a match in the beginning of
+ * a name, or anywhere in the name. Prefix search is more performant.
+ * @see https://www.mongodb.com/docs/manual/reference/operator/query/regex/#index-use
+ *
+ * @returns Chainable query object.
+ *
+ * @remarks
+ * The given query is matched case-insensitively against the name of the city
+ * with local characters, the ASCII equivalent of the name, and its alternative
+ * names e.g. "Big Apple" for "New York City". Results with any partial matches
+ * are returned.
+ */
+citySchema.query.byName = function(query: string, prefixSearch = false): CityQuery {
+  const queryPattern = new RegExp((prefixSearch ? "^" : "") + escapeStringRegexp(query), "i")
 
   return this.where({
     $or: [
@@ -66,7 +82,14 @@ citySchema.query.byName = function(query: string): CityQuery {
   })
 }
 
-citySchema.query.byProximity = function(location: LngLat, kmRadius: number): CityQuery {
+/**
+ * Search for cities within a given radius of a given location.
+ *
+ * @param location - Coordinate pair of the location to search around
+ * @param radius - Radius in kilometers
+ * @returns Chainable query object
+ */
+citySchema.query.byProximity = function(location: LngLat, radius: number): CityQuery {
   return this.where({
     location: {
       $near: {
@@ -74,7 +97,7 @@ citySchema.query.byProximity = function(location: LngLat, kmRadius: number): Cit
           type: "Point",
           coordinates: location
         },
-        $maxDistance: kmRadius * 1000
+        $maxDistance: radius * 1000
       }
     }
   })

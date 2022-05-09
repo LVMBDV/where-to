@@ -4,7 +4,18 @@ function rad(degrees: number): number {
   return degrees * Math.PI / 180
 }
 
-// http://www.movable-type.co.uk/scripts/latlong.html
+/**
+ * Calculate the bird-eye distance between two points.
+ *
+ * @param lhs - Coordinate pair of the origin.
+ * @param rhs - Coordinate pair of the destination.
+ * @returns Distance between the two points.
+ *
+ * @remarks
+ * Note that the coordinate pairs are in the form of [longitude, latitude], as per WGS84.
+ *
+ * @see http://www.movable-type.co.uk/scripts/latlong.html
+ */
 export default function distanceBetween(lhs: LngLat, rhs: LngLat) {
   const { abs, sin, cos, atan2, sqrt } = Math
 

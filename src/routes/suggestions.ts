@@ -40,10 +40,10 @@ export default async (app: FastifyInstance) => {
             minimum: -180,
             maximum: 180
           },
-          radius: {
+          radius: { // in kilometers
             type: "number",
             minimum: 0,
-            maximum: 1000
+            maximum: 1000 // a sane limit
           },
           sort: {
             type: "string",
@@ -86,6 +86,7 @@ export default async (app: FastifyInstance) => {
         cityQuery.sort({ name: "asc" })
       }
 
+      // Transform found City documents into Suggestion objects.
       cityQuery.transform((cities) => {
         return cities.map((city: City) => {
           const result: Suggestion = {

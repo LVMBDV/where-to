@@ -1,5 +1,6 @@
 import { Schema } from "mongoose"
 
+// A subschema for GeoJSON Point features.
 export default new Schema({
   type: {
     type: String,
