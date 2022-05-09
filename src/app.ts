@@ -25,7 +25,8 @@ export default async () => {
 
   await app.register(mongoosePlugin, mongooseOptions)
   for (const name in schemas) {
-    app.mongoose.model(name, schemas[name])
+    const model = app.mongoose.model(name, schemas[name])
+    await model.ensureIndexes()
   }
 
   for (const route of routes) {
