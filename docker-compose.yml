@@ -1,0 +1,27 @@
+services:
+  web:
+    build: .
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    environment:
+      NODE_HOST: "::"
+      MONGO_URI: mongodb://mongo/where-to
+  mongo:
+    image: mongo
+    restart: always
+  mongo_seeder:
+    image: mongo
+    volumes:
+      - ./data/cities_canada-usa.json:/tmp/cities.json
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    command: mongoimport --host=mongo --db=where-to --collection=cities --drop /tmp/cities.json --jsonArray
