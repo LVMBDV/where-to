@@ -5,7 +5,8 @@ module.exports = {
     "**/tests/unit/*.ts",
     "**/tests/integration/*.ts"
   ],
-  globalSetup: "./tests/helpers/setup.js",
-  globalTeardown: "./tests/helpers/teardown.js",
-  setupFilesAfterEnv: ["jest-extended/all"]
+  setupFilesAfterEnv: [
+    "./tests/helpers/setup.js",
+    "jest-extended/all"
+  ]
 }

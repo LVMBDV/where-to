@@ -9,11 +9,11 @@ try {
   throw new Error("Could not load city location data. Have you run `npm run build:data`?")
 }
 
-globalThis.cityLocations = new GeoNearby(GeoNearby.createCompactSet(cities.map((city) => {
-  return [city.location[1], city.location[0], city.name]
-})))
+beforeAll(async () => {
+  globalThis.cityLocations = new GeoNearby(GeoNearby.createCompactSet(cities.map((city) => {
+    return [city.location[1], city.location[0], city.name]
+  })))
 
-module.exports = async () => {
   globalThis.mongoServer = await MongoMemoryServer.create()
   process.env.MONGO_URI = globalThis.mongoServer.getUri()
 
@@ -22,4 +22,9 @@ module.exports = async () => {
   const City = globalThis.app.mongoose.models.City
   await City.syncIndexes()
   await City.insertMany(cities)
-}
+})
+
+afterAll (async () => {
+  await globalThis.app.close()
+  await globalThis.mongoServer.stop()
+})
