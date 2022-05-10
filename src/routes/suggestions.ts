@@ -113,6 +113,11 @@ export default async (app: FastifyInstance) => {
       })
 
       const suggestions = await cityQuery.exec()
+
+      if (sort === "distance") {
+        suggestions.sort((a: Suggestion, b: Suggestion) => a.distance! - b.distance!)
+      }
+
       reply.send({
         suggestions
       })
