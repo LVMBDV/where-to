@@ -8,5 +8,7 @@ module.exports = {
   setupFilesAfterEnv: [
     "./tests/helpers/setup.js",
     "jest-extended/all"
-  ]
+  ],
+  // creating and seeding an in-memory mongodb every time takes a bit
+  slowTestThreshold: 7
 }

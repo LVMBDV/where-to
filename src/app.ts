@@ -1,4 +1,5 @@
 import fastify from "fastify"
+import rateLimitPlugin from "@fastify/rate-limit"
 import mongoosePlugin, { MongoosePluginOptions } from "./helpers/MongoosePlugin"
 import routes from "./routes"
 import schemas from "./schemas"
@@ -15,6 +16,13 @@ export default async () => {
   const app = fastify({
     logger: process.env.NODE_ENV !== "test"
   })
+
+  if (!process.env.DISABLE_RATE_LIMIT) {
+    app.register(rateLimitPlugin, {
+      max: parseInt(process.env.RATE_LIMIT ?? "") || 5,
+      timeWindow: "1 minute"
+    })
+  }
 
   const mongooseOptions: MongoosePluginOptions = {
     uri: process.env.MONGO_URI ?? "mongodb://localhost:27017/where-to",
