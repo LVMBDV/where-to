@@ -19,8 +19,8 @@ describe("City", () => {
   })
 
   describe("#find()", () => {
-    describe("#byName", () => {
-      it("should match by name",async () => {
+    describe("#byName()", () => {
+      it("should match by name", async () => {
         const results = (await City.find().byName("Gaspé")).map(cityDocumentToObject)
         expect(results).toIncludeAllMembers(cities.filter((city) => /Gaspé/i.test(city.name)))
       })
@@ -48,7 +48,7 @@ describe("City", () => {
       })
     })
 
-    describe("#byProximity", () => {
+    describe("#byProximity()", () => {
       it("should match by proximity", async () => {
         const results = (await City.find().byProximity([-117.705898, 34.702607], 100)).map(cityDocumentToObject)
         expect(results.map((result: CityObject) => result.name))
