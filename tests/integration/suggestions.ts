@@ -10,6 +10,7 @@ async function fetchSuggestions(query: Partial<SuggestionArguments>): Promise<Su
     url: "/suggestions",
     query: Object.fromEntries(Object.entries({ sort: "name", ...query }).map(([key, value]) => [key, value.toString()]))
   })
+  jest.advanceTimersByTime(60 * 1000)
 
   if (response.statusCode !== 200) {
     throw new Error(response.body)
@@ -17,6 +18,12 @@ async function fetchSuggestions(query: Partial<SuggestionArguments>): Promise<Su
 
   return response.json<SuggestionsResponse>().suggestions as Suggestion[]
 }
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore - @types/jest is not available for jest 28 yet :(
+jest.useFakeTimers({
+  advanceTimers: true
+})
 
 describe("/suggestions", () => {
   it("should not accept empty or undefined query argument", async () => {
@@ -45,5 +52,24 @@ describe("/suggestions", () => {
 
     expect(suggestions).toHaveLength(1)
     expect(suggestions[0]).toHaveProperty("name", "London, Ontario, Canada")
+  })
+
+  it("should sort suggestions by name if not specified", async () => {
+    const suggestions = await fetchSuggestions({ query: "London" })
+    expect(suggestions).toStrictEqual(cities
+      .filter((city) => /London/i.test(city.name))
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((city) => cityToSuggestion(city)))
+  })
+
+  it("should sort suggestions by distance if specified", async () => {
+    const [lng, lat] = [-81.23, 42.98]
+    const suggestions = await fetchSuggestions({
+      query: "London",
+      latitude: lat,
+      longitude: lng,
+      radius: 1000,
+      sort: "distance"
+    })
   })
 })
