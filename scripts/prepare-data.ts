@@ -11,7 +11,8 @@ const totalLineCount = parseInt(
     .toString()
     .split(/\s+/)[0])
 
-const progressBar = isNaN(totalLineCount) ? undefined : new AsciiBar({
+// Github Actions doesn't provide a TTY, see https://github.com/hallh/elasticsearch-primary-balancer/pull/10
+const progressBar = (isNaN(totalLineCount) || !process.stdout.isTTY) ? undefined : new AsciiBar({
   formatString: "#percent #bar #message",
   total: totalLineCount,
   autoStop: true
