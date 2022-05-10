@@ -1,5 +1,6 @@
 node_modules
 dist
 **/*.tsbuildinfo
+coverage
 
 data/cities_canada-usa.json
