@@ -1,5 +1,7 @@
 # Where To?
 
+![lint and test status](https://github.com/lvmbdv/where-to/actions/workflows/lint-and-test.yml/badge.svg)
+
 A REST service that provides autocomplete suggestions for highly populated cities.
 
 ## Development
