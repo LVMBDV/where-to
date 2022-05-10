@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify"
 import { City, CityModel } from "../schemas/City"
 import distanceBetween from "../helpers/calculate-distance"
 import { getStateByCode, getCountryByAlpha2 } from "geojson-places"
+import { LngLat } from "../schemas/subschemas/Point"
 
 export interface SuggestionArguments {
   query: string
@@ -16,6 +17,26 @@ export interface Suggestion {
   latitude: number
   longitude: number
   distance?: number
+}
+
+export function cityToSuggestion(city: City, coordinates?: Partial<LngLat>): Suggestion {
+  const [longitude, latitude] = coordinates ?? []
+
+  const suggestion: Suggestion = {
+    name: [
+      city.name,
+      getStateByCode(city.state_code ?? "")?.state_name ?? "",
+      getCountryByAlpha2(city.country_code)?.country_name ?? ""
+    ].join(", "),
+    latitude: city.location.coordinates[1],
+    longitude: city.location.coordinates[0]
+  }
+
+  if (longitude !== undefined && latitude !== undefined) {
+    suggestion.distance = distanceBetween(city.location.coordinates, [longitude, latitude])
+  }
+
+  return suggestion
 }
 
 export default async (app: FastifyInstance) => {
@@ -88,23 +109,7 @@ export default async (app: FastifyInstance) => {
 
       // Transform found City documents into Suggestion objects.
       cityQuery.transform((cities) => {
-        return cities.map((city: City) => {
-          const result: Suggestion = {
-            name: [
-              city.name,
-              getStateByCode(city.state_code ?? "")?.state_name ?? "",
-              getCountryByAlpha2(city.country_code)?.country_name ?? ""
-            ].join(", "),
-            latitude: city.location.coordinates[1],
-            longitude: city.location.coordinates[0]
-          }
-
-          if (longitude !== undefined && latitude !== undefined) {
-            result.distance = distanceBetween(city.location.coordinates, [longitude, latitude])
-          }
-
-          return result
-        })
+        return cities.map((city: City) => cityToSuggestion(city, [longitude, latitude]))
       })
 
       const suggestions = await cityQuery.exec()

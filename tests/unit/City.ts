@@ -54,6 +54,11 @@ describe("City", () => {
         expect(results.map((result: CityObject) => result.name))
           .toIncludeAllMembers(await cityLocations.nearBy(-117.705898, 34.702607, 100))
       })
+
+      it("should find zero results if given 0 km as radius", async () => {
+        const results = (await City.find().byProximity([-117.705898, 34.702607], 0)).map(cityDocumentToObject)
+        expect(results).toBeEmpty()
+      })
     })
   })
 })
