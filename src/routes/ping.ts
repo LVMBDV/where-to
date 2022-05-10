@@ -1,4 +1,4 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance } from "fastify"
 
 export default async (app: FastifyInstance) => {
   app.route({
