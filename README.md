@@ -4,6 +4,35 @@
 
 A REST service that provides autocomplete suggestions for highly populated cities.
 
+## Endpoints
+
+*TODO use OpenAPI specification instead of these :arrow_down:*
+
+#### Suggestions
+
+```
+/suggestions
+```
+
+Provides suggestions based on specified parameters.
+
+- `query`: Partial or complete query for a city name, case-insensitive. Required. Cannot be empty.
+- `latitude`: Latitude of the origin point of the query, floating point, optional.
+- `longitude`: Longitude of the origin point of the query, floating point, optional.
+- `radius`: Radius of the search area of the query in kilometers, floating point. Optional.
+- `sort`: Sort order of the results, must be either "name" or "distance". Default value is "name".
+
+`latitude`, `longitude` and `radius` must be provided together, if any. If
+specified, suggestions will have their `distance` field populated accordingly.
+
+#### Ping (only available while testing)
+
+```
+/ping
+```
+
+Returns "pong". Used to test rate limiting.
+
 ## Development
 
 ```shell
